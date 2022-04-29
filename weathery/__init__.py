@@ -3,6 +3,8 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
+__version__ = "0.1.0"
+
 from flask import Flask
 
 from flask_login import LoginManager
@@ -26,7 +28,6 @@ def register_blueprints(app):
 
 
 def configure_database(app):
-
     @app.before_first_request
     def initialize_database():
         db.create_all()
