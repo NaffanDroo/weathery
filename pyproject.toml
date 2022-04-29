@@ -7,10 +7,23 @@ authors = ["Nathan Drew <1035229+NaffanDroo@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 Flask = "^2.1.2"
+python-decouple = "^3.6"
+Flask-Login = "^0.6.0"
+Flask-Migrate = "^3.1.0"
+WTForms = "^3.0.1"
+Flask-WTF = "^1.0.1"
+Flask-SQLAlchemy = "^2.5.1"
+SQLAlchemy = "^1.4.36"
+email-validator = "^1.2.0"
+gunicorn = "^20.1.0"
+Jinja2 = "^3.1.2"
+flask-restx = "^0.5.1"
+Werkzeug = "^2.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 pytest-cov = "^3.0.0"
+black = "^22.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
