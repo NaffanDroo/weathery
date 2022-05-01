@@ -5,5 +5,9 @@ setup:
 	pre-commit install
 	poetry install
 
-test: setup
+lint:
+	poetry run isort .
+	poetry run black weathery tests
+
+test: setup lint
 	poetry run pytest --cov xml:cov.xml

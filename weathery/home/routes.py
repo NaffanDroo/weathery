@@ -3,17 +3,30 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from weathery.home import blueprint
-from flask import render_template, request
+from flask import redirect, render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
+from weathery.home.weather import Forecast, WeatherAPI
+
+from weathery.home import blueprint
 
 
 @blueprint.route("/index")
 @login_required
 def index():
 
-    return render_template("home/dashboard.html", segment="dashboard")
+    return redirect("/dashboard")
+    # return render_template("home/dashboard.html", segment="dashboard")
+
+
+@blueprint.route("/dashboard")
+@login_required
+def dashboard():
+
+    forecast: Forecast = WeatherAPI("Tunbridge Wells").get_forecast()
+    return render_template(
+        "home/dashboard.html", segment="dashboard", forecast=forecast
+    )
 
 
 @blueprint.route("/<template>")
