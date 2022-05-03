@@ -6,7 +6,6 @@ Copyright (c) 2019 - present AppSeed.us
 from flask_login import UserMixin
 
 from weathery import db, login_manager
-
 from weathery.authentication.util import hash_pass
 
 

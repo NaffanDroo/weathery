@@ -1,4 +1,4 @@
-FROM python:3.9
+FROM python:3.10
 
 COPY . .
 
@@ -11,4 +11,4 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # gunicorn
-CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:app"]
+CMD ["gunicorn", "--config", "gunicorn-cfg.py", "run:weathery"]

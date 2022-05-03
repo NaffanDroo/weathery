@@ -3,14 +3,13 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from flask import render_template, redirect, request, url_for
+from flask import redirect, render_template, request, url_for
 from flask_login import current_user, login_user, logout_user
 
 from weathery import db, login_manager
 from weathery.authentication import blueprint
-from weathery.authentication.forms import LoginForm, CreateAccountForm
+from weathery.authentication.forms import CreateAccountForm, LoginForm
 from weathery.authentication.models import Users
-
 from weathery.authentication.util import verify_pass
 
 
