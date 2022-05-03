@@ -5,9 +5,13 @@ def test_version():
     assert __version__ == "0.1.0"
 
 
-def test_get_weather_has_historical_info():
+def test_historical_info():
     pass
 
 
-def test_get_weather_has_now_info():
+def test_now_info():
+    pass
+
+
+def test_forecast():
     pass
