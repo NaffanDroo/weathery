@@ -3,12 +3,12 @@
 Copyright (c) 2019 - present AppSeed.us
 """
 
-from flask import redirect, render_template, request
+from flask import flash, redirect, render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
-from weathery.home.weather import Forecast, WeatherAPI
 
 from weathery.home import blueprint
+from weathery.home.weather import Forecast, Weather, WeatherAPI
 
 
 @blueprint.route("/index")
@@ -22,8 +22,15 @@ def index():
 @blueprint.route("/dashboard")
 @login_required
 def dashboard():
+    town: str = "Tunbridge Wells"
+    longitude: float = 0.28
+    latitude: float = 51.19
+    forecast: Forecast = Forecast(town=town, forecast={}, today=Weather("", "", 0, ""))
+    try:
+        forecast = WeatherAPI(town, longitude, latitude).get_forecast()
+    except Exception as e:
+        flash(message="There was an error connecting to the API", category="error")
 
-    forecast: Forecast = WeatherAPI("Tunbridge Wells").get_forecast()
     return render_template(
         "home/dashboard.html", segment="dashboard", forecast=forecast
     )

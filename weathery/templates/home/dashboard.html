@@ -107,13 +107,15 @@
     <div class="card bg-yellow-100 border-0 shadow">
       <div class="card-header d-sm-flex flex-row align-items-center flex-0">
         <div class="d-block mb-3 mb-sm-0">
-          <div class="fs-5 fw-normal mb-2">Weather temp</div>
-          <h2 class="fs-3 fw-extrabold">...</h2>
-          <!-- <div class="small mt-2">
-            <span class="fw-normal me-2">Yesterday</span>
+          <div class="fs-5 fw-normal mb-2">Weather forecast</div>
+          <h2 class="fs-3 fw-extrabold">{{ forecast.town }}</h2>
+          <div class="small mt-2">
+            <span class="fw-normal me-2">Today</span>
             <span class="fas fa-angle-up text-success"></span>
-            <span class="text-success fw-bold">10.57%</span>
-          </div> -->
+            <span class="text-success fw-bold"
+              >{{forecast.today.temperature_str}}</span
+            >
+          </div>
         </div>
         <!-- <div class="d-flex ms-auto">
           <a href="#" class="btn btn-secondary text-dark btn-sm me-2">Month</a>
@@ -201,7 +203,7 @@
             class="col-12 col-xl-5 text-xl-center mb-3 mb-xl-0 d-flex align-items-center justify-content-xl-center"
           >
             <div class="icon-shape icon-shape-secondary rounded me-4 me-sm-0">
-              <svg
+              <!-- <svg
                 class="icon"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -212,7 +214,7 @@
                   d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
                   clip-rule="evenodd"
                 ></path>
-              </svg>
+              </svg> -->
             </div>
             <div class="d-sm-none">
               <h2 class="fw-extrabold h5">Revenue</h2>
@@ -334,7 +336,6 @@
         labels: labels,
         series: series
       }, {
-        low: 0,
         showArea: true,
         fullWidth: true,
         plugins: [
@@ -349,7 +350,7 @@
           // On the y-axis start means left and end means right
           showGrid: true,
           showLabel: true,
-
+          onlyInteger: true,
         }
       });
     }

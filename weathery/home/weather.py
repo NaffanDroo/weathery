@@ -1,38 +1,43 @@
+import re
+from ctypes import Union
 from curses import intrflush
-from datetime import datetime, timedelta
-import json
 from dataclasses import dataclass
-from typing import Dict, List
+from datetime import datetime, timedelta
+from typing import Any, Dict, List
 from urllib.parse import quote_plus
 
+import numpy as np
 import requests
-import re
 
 
 @dataclass
 class Weather:
-    temperature_str: str
+    temperature: float
     wind: str
     day: int
     description: str = ""
 
-    @property
-    def temperature(self) -> int:
-        numbers: List[str] = re.findall("[0-9]+", self.temperature_str)
-        return int(numbers[0])
+    # @property
+    # def temperature(self) -> int:
+    #     numbers: List[str] = re.findall("[0-9]+", self.temperature_str)
+    #     return int(numbers[0])
 
 
 @dataclass
 class Forecast:
     town: str
     forecast: Dict[str, Weather]
+    today: Weather
 
 
 class WeatherAPI:
     api: str = "https://goweather.herokuapp.com/weather/"
+    open_meteo_api: str = "https://api.open-meteo.com/v1/forecast"
 
-    def __init__(self, town: str) -> None:
+    def __init__(self, town: str, longitude: float, latitude: float) -> None:
         self.town: str = town
+        self.latitude = latitude
+        self.longitude = longitude
         self.url: str = f"{self.api}/{quote_plus(town)}"
         self.now: datetime = datetime.now()
 
@@ -41,23 +46,33 @@ class WeatherAPI:
         return day.strftime("%A")
 
     def get_forecast(self) -> Forecast:
-        weather: dict = requests.get(self.url).json()
+        # https://open-meteo.com/en/docs#api-documentation
+        # https://open-meteo.com/en/docs
+        params: Dict[str, Any] = {
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "hourly": ["temperature_2m", "apparent_temperature", "precipitation"],
+            "daily": ["temperature_2m_max", "temperature_2m_min", "sunrise", "sunset"],
+            "timezone": "Europe/London",
+            "past_days": 1,
+        }
+        results: dict = requests.get(url=self.open_meteo_api, params=params).json()
+
         forecast: Dict[str, Weather] = {}
-        day = 0
-        forecast[self.__day_num_to_name(day)] = Weather(
-            temperature_str=weather.get("temperature", ""),
-            wind=weather.get("wind", ""),
-            description=weather.get("description", ""),
-            day=day,
-        )
 
-        for forecast_day in weather.get("forecast", []):
-            day = forecast_day.get("day")
-            forecast[self.__day_num_to_name(int(day))] = Weather(
-                temperature_str=forecast_day.get("temperature", ""),
-                wind=forecast_day.get("wind", ""),
-                description=forecast_day.get("description", ""),
-                day=day,
+        daily_data = results.get("daily", [])
+        times = daily_data.get("time", [])
+        temps_min = daily_data.get("temperature_2m_min", [])
+        temps_max = daily_data.get("temperature_2m_max", [])
+
+        temps_avg = np.average(np.array([temps_min, temps_max]), axis=0)
+        today: Weather
+        for index, day in enumerate(times):
+            day_weather = Weather(
+                temperature=round(temps_avg[index], 2), wind="", day=day
             )
+            forecast[day] = day_weather
+            if index == params.get("past_days"):
+                today = day_weather
 
-        return Forecast(town=self.town, forecast=forecast)
+        return Forecast(town=self.town, forecast=forecast, today=today)

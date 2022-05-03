@@ -20,6 +20,7 @@ Jinja2 = "^3.1.2"
 flask-restx = "^0.5.1"
 Werkzeug = "^2.1.2"
 requests = "^2.27.1"
+numpy = "^1.22.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1"
